@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataLibrary.Data
 {
-    public class OrderData
+    public class OrderData : IOrderData
     {
         private readonly IDataAccess _dataAccess;
         private readonly ConnectionStringData _connectionString;
@@ -38,7 +38,7 @@ namespace DataLibrary.Data
         public Task<int> UpdateOrderName(int orderId, string orderName)
         {
             return _dataAccess.SaveData("dbo.spOrders_UpdateName",
-                                        new 
+                                        new
                                         {
                                             Id = orderId,
                                             OrderName = orderName
@@ -59,8 +59,11 @@ namespace DataLibrary.Data
         public async Task<OrderModel> GetOrderById(int orderId)
         {
             var recs = await _dataAccess.LoadData<OrderModel, dynamic>("dbo.spOrders_GetById",
-                                                            new {Id = orderId },
-                                                            _connectionString.SqlConnectionName);
+                new
+                {
+                    Id = orderId
+                },
+                _connectionString.SqlConnectionName);
             return recs.FirstOrDefault();
         }
     }
